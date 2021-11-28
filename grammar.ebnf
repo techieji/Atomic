@@ -1,0 +1,8 @@
+start: assignment*
+assignment: NAME "=" expr ";"
+?expr: "λ" [ NAME ("," NAME)* ] "->" expr
+    | expr "(" [ expr ("," expr)* ] ")"
+    | "(" expr ")"
+    | NAME
+    | NUMBER
+    | STRING
