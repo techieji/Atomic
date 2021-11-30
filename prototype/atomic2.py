@@ -15,31 +15,30 @@ class Lookahead:
         return ret
     def __iter__(self):
         return self
-
-def parse_assignment(i):
-    name = parse_name(i)
-    assert next(i) == '='
-    expr = parse(i)
-    return ('assignment', name, expr)
+    def select_until(self, c):
+        s = ''
+        while self.next != c:
+            s += next(self)
+        return s
+    @propert
 
 def parse(i):
-    if i.next is None:
-        return
     if i.next == '(':
+        e = parse(Lookahead(i.select_until(')')))
         next(i)
-        return parse(i)
+        return e
     elif i.next == 'λ':
         return parse_func(i)
     elif i.next in string.digits:
         return parse_num_or_float(i)
     elif i.next == '"':
-        return pase_string(i)
+        return parse_string(i)
     elif i.next in [')', ';', ',']:
         return
     else:
         return parse_fncall_or_name(i)
 
-def parse_func(i):
+def parse_func(s):
     assert next(i) == 'λ'
     args = []
     name = ''
